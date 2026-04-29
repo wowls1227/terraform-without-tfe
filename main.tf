@@ -6,8 +6,6 @@ terraform {
     }
     key = "tfstate-local" # Name of the tfstate file
 
-    access_key = "495aVTYinnM7k70UTG97" # Access and secret keys
-    secret_key = "xU7nXeLhvIB6rouejpTO8gHgvXVG2mn4tDai7O49"
 
     region                      = "main"
     skip_credentials_validation = true
