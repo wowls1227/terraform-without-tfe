@@ -2,7 +2,7 @@ terraform {
   backend "s3" {
     bucket = "terraform-state" # Name of the S3 bucket
     endpoints = {
-      s3 = "http://minio.minio.svc.cluster.local" # Minio endpoint
+      s3 = "http://minio.minio.svc.cluster.local:9000" # Minio endpoint
     }
     key = "tfstate-local" # Name of the tfstate file
 
