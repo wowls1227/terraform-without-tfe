@@ -25,6 +25,16 @@ provider "aws" {
   secret_key = var.secret_key
 }
 
+resource "aws_instance" "example" {
+  ami           = "ami-0c9c942bd7bf113a2"  # Amazon Linux 2023 (서울)
+  instance_type = "t3.micro"
+
+  tags = {
+    Name = "kjj-example-instance"
+  }
+}
+
+
 # 리소스 1: 로컬 파일 생성
 resource "local_file" "hello" {
   filename = "${path.module}/hello.txt"
