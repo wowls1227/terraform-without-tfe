@@ -16,39 +16,54 @@ terraform {
   }
 }
 
-variable "access_key" {}
-variable "secret_key" {}
+// provider
+provider "sql" {
+  url = "postgres://terraform:${var.db_password}@postgresql.terraform.svc.cluster.local:5432/tfstate?sslmode=disable"
+}
 
-provider "local" {}
 provider "aws" {
   region = "ap-northeast-2"
   access_key = var.access_key
   secret_key = var.secret_key
 }
 
-resource "aws_instance" "example" {
-  ami           = "ami-0c9c942bd7bf113a2"  # Amazon Linux 2023 (서울)
-  instance_type = "t3.micro"
 
-  tags = {
-    Name = "kjj-example-instance"
+// variable
+variable "access_key" {}
+variable "secret_key" {}
+variable "db_password" {}
+
+
+// data
+data "sql_query" "ec2_instances" {
+  query = "SELECT name, instance_type, ami, env FROM ec2_instances"
+}
+
+// local
+locals {
+  # 조회 결과를 for_each에 쓸 수 있게 map으로 변환
+  # result 형태: [{ name=web-server, instance_type=t3.micro, ... }, ...]
+  ec2_instances = {
+    for row in data.sql_query.ec2_instances.result :
+    row.name => row
   }
 }
 
 
-# 리소스 1: 로컬 파일 생성
-resource "local_file" "hello" {
-  filename = "${path.module}/hello.txt"
-  content  = "Hello, Terraform + MinIO!"
+// resource
+resource "aws_instance" "this" {
+  for_each = local.ec2_instances
+
+  ami           = each.value.ami
+  instance_type = each.value.instance_type
+
+  tags = {
+    Name = each.key
+    Env  = each.value.env
+  }
 }
 
-# 리소스 2: 로컬 파일 생성
-resource "local_file" "config" {
-  filename = "${path.module}/config.txt"
-  content  = "generated_at = ${timestamp()}"
-}
-
-# null resource
+// null resource
 resource "terraform_data" "ls_al" {
   triggers_replace = timestamp()
 
