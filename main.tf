@@ -1,4 +1,14 @@
 terraform {
+ required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+    sql = {
+      source  = "paultyng/sql"  # hashicorp/sql 아님
+      version = "~> 0.5"
+    }
+  }
   backend "s3" {
     bucket = "terraform-state" # Name of the S3 bucket
     endpoints = {
