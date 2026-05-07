@@ -29,3 +29,12 @@ resource "local_file" "config" {
   filename = "${path.module}/config.txt"
   content  = "generated_at = ${timestamp()}"
 }
+
+# null resource
+resource "terraform_data" "ls_al" {
+  triggers_replace = timestamp()
+
+  provisioner "local-exec" {
+    command = "ls -al"
+  }
+}
