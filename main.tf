@@ -16,7 +16,14 @@ terraform {
   }
 }
 
+variable "access_key" {}
+variable "secret_key" {}
+
 provider "local" {}
+provider "aws" {
+  access_key = var.access_key
+  secret_key = var.secret_key
+}
 
 # 리소스 1: 로컬 파일 생성
 resource "local_file" "hello" {
