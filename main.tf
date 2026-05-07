@@ -28,7 +28,7 @@ terraform {
 
 // provider
 provider "sql" {
-  url = "postgres://terraform:${var.db_password}@postgresql.postgresql.svc.cluster.local:5432/tfstate?sslmode=disable"
+  url = "postgres://terraform:${var.db_password}@postgresql.postgresql.svc.cluster.local:5432/tfvars?sslmode=disable"
 }
 
 provider "aws" {
